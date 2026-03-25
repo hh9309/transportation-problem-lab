@@ -122,18 +122,33 @@ const App: React.FC = () => {
           return nextState;
         case 'deltas':
           let en = { r: -1, c: -1 };
-          prev.grid.forEach(r => r.forEach(c => { if (c.highlight === 'entering') en = { r: c.row, c: c.col }; }));
+          prev.grid.forEach((row, r) => row.forEach((cell, c) => { 
+            if (cell.highlight === 'entering') en = { r, c }; 
+          }));
+          if (en.r === -1) return prev;
           const loop = findLoop(en, prev.grid);
           if (loop) {
             const g2 = prev.grid.map(r => r.map(c => ({...c})));
-            loop.forEach((node, idx) => { if (idx > 0) g2[node.r][node.c].highlight = idx % 2 === 0 ? 'loop-plus' : 'loop-minus'; });
+            loop.forEach((node, idx) => { 
+              // Include idx === 0 to show the '+' on the entering cell
+              g2[node.r][node.c].highlight = idx % 2 === 0 ? 'loop-plus' : 'loop-minus'; 
+            });
             nextState.grid = g2; nextState.status = 'loop'; nextState.message = `迭代 ${prev.iteration}: 构建闭回路`;
             nextState.stepDescription = "找到闭回路。偶数点(+)增加运量，奇数点(-)减少运量。计算调整量 θ。";
           }
           return nextState;
         case 'loop':
           let en2 = { r: -1, c: -1 };
-          prev.grid.forEach(r => r.forEach(c => { if (c.highlight === 'entering') en2 = { r: c.row, c: c.col }; }));
+          prev.grid.forEach((row, r) => row.forEach((cell, c) => { 
+            if (cell.highlight === 'loop-plus' && !cell.isBasin) en2 = { r, c }; 
+          }));
+          if (en2.r === -1) {
+             // Fallback to searching for 'entering' if 'loop-plus' not found
+             prev.grid.forEach((row, r) => row.forEach((cell, c) => { 
+               if (cell.highlight === 'entering') en2 = { r, c }; 
+             }));
+          }
+          if (en2.r === -1) return prev;
           const loop2 = findLoop(en2, prev.grid);
           if (loop2) {
              const { newGrid, theta } = applyPivot(prev.grid, loop2);
@@ -177,7 +192,9 @@ const App: React.FC = () => {
             loopToDisplay = findLoop(enteringCell, g1);
             if (loopToDisplay) {
                 gridWithLoop = g1.map(row => row.map(cell => ({...cell})));
-                loopToDisplay.forEach((node, idx) => { if (idx > 0) gridWithLoop[node.r][node.c].highlight = idx % 2 === 0 ? 'loop-plus' : 'loop-minus'; });
+                loopToDisplay.forEach((node, idx) => { 
+                    gridWithLoop[node.r][node.c].highlight = idx % 2 === 0 ? 'loop-plus' : 'loop-minus'; 
+                });
             }
         }
         setSolver(prev => ({ ...prev, grid: gridWithLoop, status: 'loop', message: `迭代 ${currentIteration}: 寻找闭回路`, stepDescription: `最小检验数 Δ=${minDelta}。构建闭回路准备调整。` }));
