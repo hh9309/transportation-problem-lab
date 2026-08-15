@@ -1901,7 +1901,7 @@ export const TableauSolverView: React.FC<TableauSolverViewProps> = ({
 
       {/* ========================================================================= */}
       {/* 模块 3：表上作业法最优解输出模块 (Optimal Solution Result Output Module)    */}
-      {/* 当所有检验数非负 (Δ_ij ≥ 0) 时输出最优解                                */}
+      {/* 数据直接从【运输问题最优解表】导入                                          */}
       {/* ========================================================================= */}
       <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-6 rounded-2xl border-2 border-emerald-500/60 shadow-2xl space-y-5">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-emerald-900/60">
@@ -1915,28 +1915,20 @@ export const TableauSolverView: React.FC<TableauSolverViewProps> = ({
                   表上作业法最优解输出模块 (Transportation Simplex Optimal Solution Output)
                 </h3>
                 <span className="px-2.5 py-0.5 rounded-full text-xs font-extrabold font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                  {currentStep.isOptimal ? '✓ 已达成全局最优解' : `迭代演进中 (Step ${stepIndex + 1}/${steps.length})`}
+                  数据直接从运输问题最优解表导入
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-1">
-                {currentStep.isOptimal
-                  ? '经过位势法与闭回路迭代演进，所有非基变量检验数均满足 Δ_ij ≥ 0，证明已达成最低运费最优调运方案。'
-                  : '当所有的检验数非负时即输出最优解。若有负检验数，已自动选取负检验数最小者进行换基迭代。'}
+                本模块数据直接从上方【运输问题最优解表】导入，汇总全局最终最优调运方案、干线运量分配明细与最优位势向量。
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            <button
-              onClick={() => {
-                setIsPlaying(false);
-                setStepIndex(steps.length - 1);
-              }}
-              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs rounded-xl shadow-lg flex items-center gap-1.5 transition"
-            >
-              <CheckCircle2 className="w-4 h-4" />
-              <span>载入最优步矩阵</span>
-            </button>
+            <span className="px-3.5 py-1.5 bg-emerald-950/80 text-emerald-300 font-extrabold text-xs font-mono rounded-xl border border-emerald-500/40 shadow-sm flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              <span>最优解数据直通已同步</span>
+            </span>
           </div>
         </div>
 
