@@ -1,0 +1,6 @@
+{
+  "name": "运输问题与表上作业法实验室",
+  "description": "提供运筹模型与网络拓扑、可编辑运输矩阵沙盒、初始可行解对比（西北角法、最小元素法、伏格尔法）、表上作业法全拆解（MODI位势法与闭回路）、变体转换切片（产销不平衡、禁运、转运、容量限制）、6大经典案例库、Python代码与AI实时诊断以及方案导出。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
